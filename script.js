@@ -225,7 +225,8 @@ load_btn.addEventListener("click", async () => {
   // Weather archive data is only for dates more than 2 days in the past, 
   // so if the date is today or tomorrow, it will just show null.
 
-  document.getElementById("weather-icon").src = `./assets/${weatherData.weatherCode}.jpg`;
+  const basePath = window.location.pathname.replace(/\/[^\/]*$/, '');
+  document.getElementById("weather-icon").src = `${basePath}/assets/${weatherData.weatherCode}.jpg`;
 });
 
 
