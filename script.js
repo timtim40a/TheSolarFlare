@@ -1,30 +1,41 @@
 // script.js
 
-
-
 nasa_url = "https://api.nasa.gov/planetary/apod/?api_key=UASXdX7M2IQPPEzb2OWq1BIpLrI1W7kW8UINkuJh";
 load_btn = document.getElementById("loadData");
 location_load_btn = document.getElementById("loadLocation");
 loc_span = document.getElementById("current-loc");
+
 const apodSpinner = document.getElementById('apod-spinner');
 const weatherSpinner = document.getElementById('weather-spinner');
+// Initialize both loading spinners
 
 let currentLat = localStorage.getItem("currentLat") || 0;
 let currentLon = localStorage.getItem("currentLon") || 0;
 let currentLocation = localStorage.getItem("currentLocation") || "Unknown Location";
 let currentCity = currentLocation.split(',')[0].trim();
+// getting the location data from localStroage if it exists, otherwise setting default values
 
 let today = new Date();
-let dd = String(today.getDate()).padStart(2, '0');
-let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+let dd = String(today.getDate()).padStart(2, '0'); 
+let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0, therefore we add 1
 let yyyy = today.getFullYear();
-
 let formattedDate = `${yyyy}-${mm}-${dd}`;
+// formatting the date to YYYY-MM-DD which is the format required by the NASA API
+
 
 async function getCoordinates(inputLocation) {
+  // Function to fetch coordinates from Nominatim API based on user input (city name or distrct, etc.)
+  //
+  // - If the input is not found through Nominatim search, it returns a string "Location not found."
+  // - If there is an error fetching the data, it returns a string "Error fetching location."
+  //
+  // Following applies to all async functions created in this file:
+  // Initially the function tries to fetch the data from the API, then converts it into JSON object format.
+  // If the data is found, it returns an object with all the data in key-value pairs.
   try {
     const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(inputLocation)}`);
     const data = await response.json();
+
     if (data.length > 0) {
       const location = data[0];
       return { name: location.display_name, lat: location.lat, lon: location.lon };
@@ -37,6 +48,12 @@ async function getCoordinates(inputLocation) {
 }
 
 async function getAPOD(date = undefined) {
+  // Function to fetch Astronomy Picture of the Day (APOD) data from NASA API including an image and a fact
+  //
+  // - If the date is not provided, it fetches the APOD for the current date.
+  // - If the date is provided, it fetches the APOD for that specific date by chnaging the URL.
+  // - If the data is not found, it returns null.
+
   apodSpinner.style.display = 'block'; // Show spinner
 
   try {
@@ -65,6 +82,11 @@ async function getAPOD(date = undefined) {
 }
 
 async function getWeatherData(lat, lon, date) {
+  // Function to fetch archived weather data from Open Meteo API based on latitude, longitude and date
+  //
+  // - If the data is not found, it returns null.
+  // - If there is an error fetching the data, it logs the error to the console
+
   weatherSpinner.style.display = 'block'; // Show spinner
   try {
     const response = await fetch(
@@ -92,6 +114,11 @@ async function getWeatherData(lat, lon, date) {
       } else if (data.daily.weather_code[0] > 94) {
         weatherType = "thunderstorm";
       }
+
+      // Determine weather type based on weather_code, a code that represents the weather condition
+      // Data about these has been taken from an official WMO document,
+      // which can be found here: https://artefacts.ceda.ac.uk/badc_datadocs/surface/code.html
+
       return {
         weatherCode: weatherType,
         temperatureMean: data.daily.temperature_2m_mean[0],
@@ -111,6 +138,12 @@ async function getWeatherData(lat, lon, date) {
 }
 
 async function getSatelliteData(lat, lon) {
+  // Function to fetch satellite data from N2YO API based on latitude and longitude
+  //
+  // - If the data is not found, it returns a string "No satellites found."
+  // - If there is an error fetching the data, it logs the error to the console and returns mock data.
+  // Mostly used for testing purposes, as the N2YO API is not CORS-enabled and cannot be fetched 
+  // directly from the browser. It would be too long to set up a Django or Flask server just for this purpose
   const apiKey = "YOUR_API_KEY";
   const apiUrl = `https://api.n2yo.com/rest/v1/satellite/above/${lat}/${lon}/0/70/0/10/?apiKey=${apiKey}`;
 
@@ -142,6 +175,8 @@ async function getSatelliteData(lat, lon) {
 
 
 load_btn.addEventListener("click", async () => {
+  // Event listener for the "Load News" button
+
   const inputDate = document.getElementById("inputDate").value || formattedDate;
   
   document.getElementById("current-loc").textContent = `Current location: ${currentLocation}`;
@@ -164,6 +199,9 @@ load_btn.addEventListener("click", async () => {
   document.getElementById("astro-image").src =
     APODdata.url || "https://via.placeholder.com/150";
 
+  // Again, the output is responsive. If the image is not available, it will show a placeholder image.
+  // If the explanation or title is not available, it will show a default message etc.
+
   const weatherData = await getWeatherData(currentLat, currentLon, inputDate);
   console.log(weatherData);
   if (!weatherData) { 
@@ -184,14 +222,22 @@ load_btn.addEventListener("click", async () => {
     <p>Precipitation Hours: ${weatherData.precipitationHours} hours</p>
   `;
 
-  document.getElementById("weather-icon").src = `/assets/${weatherData.weatherCode}.jpg`;
+  // Weather archive data is only for dates more than 2 days in the past, 
+  // so if the date is today or tomorrow, it will just show null.
+
+  document.getElementById("weather-icon").src = `./assets/${weatherData.weatherCode}.jpg`;
 });
 
 
 (async () => {
+  // Immediately called function to fetch the current location and coordinates upon page load
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
+
+    // Here I use the ipapi.co API to get the user's approximate location based on their IP address.
+    // Which is usually not very accurate, but it is enough for this purpose.
+    // Later user can alter this
 
     document.getElementById("current-loc").innerHTML =
       `Approximate location: ${data.city}, ${data.region}, ${data.country_name}`;
@@ -209,6 +255,9 @@ load_btn.addEventListener("click", async () => {
       localStorage.setItem("currentLon", currentLon);
       localStorage.setItem("currentLocation", currentLocation);
 
+      // I svaed currentLat, currentLon and currentLocation to localStorage so that
+      // the user does not have to enter their location every time they visit the page
+
       console.log(`Current coordinates: ${currentLat}, ${currentLon}`);
       document.getElementById("current-coords").textContent = `Current coordinates: ${locData.lat}, ${locData.lon}`;
     }
@@ -218,6 +267,8 @@ load_btn.addEventListener("click", async () => {
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // The same function as above, but it is called when the DOM is fully loaded.
+  // This is to ensure that the current location and coordinates are fetched and displayed immediately after loading the page.
   const inputDate = document.getElementById("inputDate").value || formattedDate;
   
   document.getElementById("current-loc").textContent = `Current location: ${currentLocation}`;
@@ -259,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     <p>Precipitation Hours: ${weatherData.precipitationHours} hours</p>
   `;
   
-  document.getElementById("weather-icon").src = `/assets/${weatherData.weatherCode}.jpg`;
+  document.getElementById("weather-icon").src = `./assets/${weatherData.weatherCode}.jpg`;
 
   const satellites = await getSatelliteData(currentLat, currentLon);
   const output = document.getElementById("satellite-output");
@@ -315,6 +366,8 @@ location_load_btn.addEventListener("click", async () => {
   }
 }});
 
+// I have also tried various APIs such as Bootprint, just to find out that they are not supported anymore.
+// Some other APIs I have tried were not CORS-enabled, so I could not fetch them directly from the browser.
 
 
 

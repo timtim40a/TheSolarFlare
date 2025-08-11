@@ -1,15 +1,23 @@
+/* styles.css */
 
+/* These two @font-face rules define custom fonts to be used bu the page. 
+Both of the fonts are saved in assets folder */
 @font-face {
-    font-family: 'Gothic'; /*a name to be used later*/
-    src: url('./assets/Sketch\ Gothic\ School.ttf') format(truetype); /*URL to font*/
+    font-family: 'Gothic'; /*how to refer to the new font*/
+    src: url('./assets/Sketch\ Gothic\ School.ttf') format(truetype); /*URL (in my case path) to font*/
 }
 
 @font-face {
-    font-family: 'Gothic2'; /*a name to be used later*/
-    src: url('./assets/PERRYGOT.TTF') format(truetype); /*URL to font*/
+    font-family: 'Gothic2'; 
+    src: url('./assets/PERRYGOT.TTF') format(truetype);
 }
+
 
 @layer base, special;
+
+/* Layer base contains the main styles for the page, such as colors, fonts, and layout.
+   Layer special contains styles for specific elements, such as the spinner animation 
+   (in this case for them only). */
 
 @layer base {
     :root {
@@ -41,6 +49,8 @@
     text-align: end;
   }
 
+  /* Main container */
+
   .main-div {
     font-family: var(--font-family);
     font-size: var(--font-size);
@@ -69,6 +79,7 @@
       margin: 0 auto;
   }
 
+  /* Content container for the two divs that are to be displayed as two columns */
   .content-container {
     display: flex;
     gap: 20px;
@@ -78,7 +89,7 @@
   }
 
   .content {
-    flex: 1 1 50%; /* default: 2 equal columns */
+    flex: 1 1 50%; /* 2 equal columns */
     box-sizing: border-box;
     min-width: 0;
     max-width: 45%;
@@ -88,14 +99,15 @@
     box-shadow: #505050 10px 10px 10px;
   }
 
+  /* Same as with the content container, but for the weather data and a corresponding image */
   .weather {
     display: flex;
     gap: 5px;
-    flex-wrap: wrap; /* allows stacking when space is too small */
+    flex-wrap: wrap; 
   }
 
   #weather-output{
-    flex: 1 1 60%; /* default: 2 equal columns */
+    flex: 1 1 60%; 
     box-sizing: border-box;
     min-width: 0;
     background-color: #f5ebbf;
@@ -103,7 +115,7 @@
     text-align: center;
   }
   #weather-icon{
-    flex: 1 1 15%; /* default: 2 equal columns */
+    flex: 1 1 15%; 
     box-sizing: border-box;
     min-width: 0;
     height: auto;
@@ -119,7 +131,7 @@
     font-family: var(--h-font2);
   }
 
-  /* On small screens, stack vertically */
+  /* On small screens, stack content vertically */
   @media (max-width: 600px) {
     .content {
       flex: 1 1 100%;
