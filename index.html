@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sepia Newspaper</title>
+</head>
+<body>
+<body>
+    
+    <main style="margin-left: 50px; 
+                margin-right: 50px;">
+        <div class="main-div">
+            <header>
+                <nav>
+                        <input id="inputDate" placeholder="YYYY-MM-DD"></input>
+                        <button id="loadData">Load News</button>
+                        <span>pick a valid date between 1995-06-20 and today</span>
+                        <br>
+                        <input id="inputLocation" placeholder="Enter Location"></input>
+                        <button id="loadLocation">Load Location</button>
+                        <span id="current-loc">Current location: Loading</span>
+                        <p id="current-coords">Current coordinates: Loading</p>
+                </nav>
+                <h1>The Solar Flare</h1>
+            </header>
+            <div class="content-container">
+                <div class="content">
+                    <div class="spinner" id="apod-spinner"></div>
+                    <h2 id="title"></h2>
+                    <p id="explanation"></p>
+                    <img id="astro-image" class="image"/>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="content">
+                    <div class="spinner" id="weather-spinner"></div>
+                    <h2>Archived Weather Data</h2>
+                    <span> (works only for more than 2 days in the past)</span>
+                    <div class="weather">
+                        <div id="weather-output">
+                            <p>Weather: Loading...</p>
+                        </div>
+                        <img id="weather-icon" class="image" src="/assets/sunny.jpg" alt="Weather Icon"/>
+                    </div>
+                    <p id="satellite-output">Satellites: Loading...</p>
+                </div>
+            </div>
+            <footer>
+                <a href="https://github.com/timtim40a">GitHub</a>
+                <p>Data provided by NASA, Open Meteo, and other sources.</p>
+                <p id="copyright">&copy; 2025 The Sepia Newspaper</p>
+            </footer>
+        </div>
+    </main>
+    <script src="script.js" defer></script>
+</body>
+</html>

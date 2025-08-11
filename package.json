@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@fontsource/league-gothic": "^5.2.6",
+    "jquery": "^3.7.1"
+  },
+  "scripts": {
+    "process-image": "node process-image.js"
+  }
+}

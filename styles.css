@@ -1,0 +1,144 @@
+
+@font-face {
+    font-family: 'Gothic'; /*a name to be used later*/
+    src: url('./assets/Sketch\ Gothic\ School.ttf') format(truetype); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'Gothic2'; /*a name to be used later*/
+    src: url('./assets/PERRYGOT.TTF') format(truetype); /*URL to font*/
+}
+
+@layer base, special;
+
+@layer base {
+    :root {
+        --font-family: 'Courier New', serif;
+        --h-font: 'Gothic';
+        --h-font2: 'Gothic2';
+        --font-size: 16px;
+        --line-height: 1.5;
+        --text-color: #333;
+        --background-color: #f5ebbf;
+        --paper-color: #e9d991;
+    }
+  
+  body {
+    background-color: var(--background-color);
+  }
+  
+  footer {
+    background-color: var(--paper-color);
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    text-align: left;
+  }
+
+  #copyright{
+    font-family: var(--h-font);
+    font-size: 40px;
+    text-align: end;
+  }
+
+  .main-div {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    color: var(--text-color);
+    background-color: var(--paper-color);
+    box-shadow: #505050 10px 10px 10px;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 20px;
+  }
+
+   h1 {
+    font-family: var(--h-font);
+    font-size: 100px;
+    font-weight: normal;
+    color: var(--text-color);
+    text-align: center;
+  }
+
+  .image,
+  canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+  }
+
+  .content-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* allows stacking when space is too small */
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .content {
+    flex: 1 1 50%; /* default: 2 equal columns */
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 45%;
+    background-color: #f5ebbf;
+    padding: 2%;
+    margin-bottom: 20px;
+    box-shadow: #505050 10px 10px 10px;
+  }
+
+  .weather {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap; /* allows stacking when space is too small */
+  }
+
+  #weather-output{
+    flex: 1 1 60%; /* default: 2 equal columns */
+    box-sizing: border-box;
+    min-width: 0;
+    background-color: #f5ebbf;
+    padding: 2%;
+    text-align: center;
+  }
+  #weather-icon{
+    flex: 1 1 15%; /* default: 2 equal columns */
+    box-sizing: border-box;
+    min-width: 0;
+    height: auto;
+  }
+
+  .weather-output p {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  }
+
+  h2, h3 {
+    text-align: center;
+    font-family: var(--h-font2);
+  }
+
+  /* On small screens, stack vertically */
+  @media (max-width: 600px) {
+    .content {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+@layer special {
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #333;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+}
